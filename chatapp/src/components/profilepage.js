@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useCallback } from 'react';
 
 import { db, auth } from './firebaseConfig'; // Import your Firebase setup
 import { collection, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
@@ -47,59 +47,116 @@ const ProfilePage = () => {
       console.error('Error fetching users:', error);
     }
   };
+  const fetchUserFriends = useCallback(async (userEmail) => {
+    try {
+      const userRef = doc(db, 'users', userEmail);
+      const userSnap = await getDoc(userRef);
+  
+      if (userSnap.exists()) {
+        const userData = userSnap.data();
+        const friendIds = userData.friends || [];
+  
+        // Fetch friend details by their IDs
+        const friendsData = await Promise.all(
+          friendIds.map(async (friendId) => {
+            const friendRef = doc(db, 'users', friendId);
+            const friendSnap = await getDoc(friendRef);
+            return friendSnap.exists() ? friendSnap.data() : null;
+          })
+        );
+  
+        setFriends(friendsData.filter(Boolean)); // Exclude nulls
+        console.log("Fetched friends:", friendsData);
+      } else {
+        console.log("User not found.");
+      }
+    } catch (error) {
+      console.error("Error fetching friends:", error);
+    }
+  }, []);
   
 
  // Fetch current user's friends
-const fetchUserFriends = async (userEmail) => {
+// const fetchUserFriends = async (userEmail) => {
  
-  try {
-    const userRef = doc(db, 'users', userEmail);
-    const userSnap = await getDoc(userRef);
+//   try {
+//     const userRef = doc(db, 'users', userEmail);
+//     const userSnap = await getDoc(userRef);
 
-    if (userSnap.exists()) {
-      const userData = userSnap.data();
-      const friendIds = userData.friends || [];
+//     if (userSnap.exists()) {
+//       const userData = userSnap.data();
+//       const friendIds = userData.friends || [];
 
-      // Fetch friend details by their IDs
-      const friendsData = await Promise.all(
-        friendIds.map(async (friendId) => {
-          const friendRef = doc(db, 'users', friendId);
-          const friendSnap = await getDoc(friendRef);
-          return friendSnap.exists() ? friendSnap.data() : null;
-        })
-      );
+//       // Fetch friend details by their IDs
+//       const friendsData = await Promise.all(
+//         friendIds.map(async (friendId) => {
+//           const friendRef = doc(db, 'users', friendId);
+//           const friendSnap = await getDoc(friendRef);
+//           return friendSnap.exists() ? friendSnap.data() : null;
+//         })
+//       );
 
-      setFriends(friendsData.filter(Boolean)); // Exclude nulls if any friends are missing
-      console.log(friends);
-    } else {
-      console.log("User not found.");
-    }
-  } catch (error) {
-    console.error("Error fetching friends:", error);
-  }
-};
+//       setFriends(friendsData.filter(Boolean)); // Exclude nulls if any friends are missing
+//       console.log(friends);
+//     } else {
+//       console.log("User not found.");
+//     }
+//   } catch (error) {
+//     console.error("Error fetching friends:", error);
+//   }
+// };
 
 
+  // useEffect(() => {
+  //   // fetchUsers(); // Fetch all registered users
+  //   const unsubscribe = onAuthStateChanged(auth, async (user) => {
+  //     if (user) {
+  //       console.log("User signed in:", user.email);
+  //       setCurrent(user.email);
+  //       // Fetch user data from Firestore
+  //       fetchUserFriends(user.email);
+  //         // Get the user's friends
+
+  //       // Check if user data exists in Firestore, create it if not
+  //       const userRef = doc(db, 'users', user.email);
+  //       const userSnap = await getDoc(userRef);
+
+  //       if (!userSnap.exists()) {
+  //         await setDoc(userRef, {
+  //           username: user.displayName || 'Guest',
+  //           profilePic: user.photoURL || '',
+  //           friends: [],  // Start with an empty friends list
+  //           chats: []  // Empty chats list initially
+  //         });
+  //         console.log("User data created in Firestore.");
+  //       } else {
+  //         console.log("User data already exists in Firestore.");
+  //       }
+  //     }
+  //     fetchUsers(); // Fetch all registered users
+  //   });
+
+  //   return () => unsubscribe(); // Clean up the listener when component unmounts
+  // }, []);
   useEffect(() => {
-    // fetchUsers(); // Fetch all registered users
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
         console.log("User signed in:", user.email);
         setCurrent(user.email);
-        // Fetch user data from Firestore
+  
+        // Fetch user friends
         fetchUserFriends(user.email);
-          // Get the user's friends
-
-        // Check if user data exists in Firestore, create it if not
+  
+        // Check Firestore for user data
         const userRef = doc(db, 'users', user.email);
         const userSnap = await getDoc(userRef);
-
+  
         if (!userSnap.exists()) {
           await setDoc(userRef, {
             username: user.displayName || 'Guest',
             profilePic: user.photoURL || '',
-            friends: [],  // Start with an empty friends list
-            chats: []  // Empty chats list initially
+            friends: [],
+            chats: [],
           });
           console.log("User data created in Firestore.");
         } else {
@@ -108,9 +165,10 @@ const fetchUserFriends = async (userEmail) => {
       }
       fetchUsers(); // Fetch all registered users
     });
-
-    return () => unsubscribe(); // Clean up the listener when component unmounts
-  }, []);
+  
+    return () => unsubscribe();
+  }, [fetchUserFriends]); // Include fetchUserFriends in dependencies
+  
 
   const handleAddFriend = async (friend) => {
     const user = auth.currentUser;

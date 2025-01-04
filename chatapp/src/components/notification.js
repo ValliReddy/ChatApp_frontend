@@ -56,7 +56,7 @@ function Notification({ message }) {
               alignItems: 'center',
             }}>
               <span>{message}</span>
-              <a
+              <button
                 onClick={() => setShowMsg(false)}
                 style={{
                   fontSize: '0.875rem',
@@ -69,7 +69,7 @@ function Notification({ message }) {
                 }}
               >
                 X
-              </a>
+              </button>
             </div>
             <div style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#4a5568' }}>
               Disappearing in {timeLeft} seconds

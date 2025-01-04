@@ -4,7 +4,7 @@ import 'font-awesome/css/font-awesome.min.css';
 import './chatApp.css'; // Add custom CSS for styling
 import io from 'socket.io-client';
 import { useUserContext } from './UserProvider'; // Import the custom hook
-import { collection, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db, auth } from './firebaseConfig'; // Import your Firebase setup
 
 const ChatApp = () => {
@@ -13,7 +13,7 @@ const ChatApp = () => {
   const [registered, setRegistered] = useState([]);  // To store all registered users
   const [messages, setMessages] = useState({}); // Store messages by receiver
   const [newMessage, setNewMessage] = useState('');
-  const [username, setUsername] = useState('');
+  
   const [currentUser, setCurrentUser] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null); // Track selected chat user
@@ -30,10 +30,16 @@ const ChatApp = () => {
   
  console.log("group names",group_names);
 
- useEffect(() => {
+//  useEffect(() => {
+//   if (user) {
+//     setCurrentUser(user.email);
+//   }})
+useEffect(() => {
   if (user) {
     setCurrentUser(user.email);
-  }})
+  }
+}, [user, setCurrentUser]); // Include setCurrentUser as a dependency
+
 
 // useEffect(() => {
 //   if (currentUser) {
