@@ -101,7 +101,9 @@ useEffect(() => {
 //     });
 useEffect(() => {
   if (currentUser) {
-    socket.current = io(process.env.BACKEND_URL || "http://localhost:5000");
+    console.log(process.env.BACKEND_URL);
+    socket.current = io(process.env.BACKEND_URL);
+  
     // const socket = io(process.env.BACKEND_URL || "http://localhost:5000");
 
 
