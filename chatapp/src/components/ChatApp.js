@@ -736,10 +736,10 @@ useEffect(() => {
 
 
 // </div>
- {/* Chat History */}
+
 <div className="chat-history">
   <ul className="list-unstyled">
-    {(messages[selectedUser] || messages[selectedGroup] || []).map((msg, index) => (
+    {(messages?.[selectedUser] || messages?.[selectedGroup] || []).map((msg, index) => (
       <li key={index} className="clearfix">
         <div
           className={`message-box ${
@@ -748,7 +748,7 @@ useEffect(() => {
           onClick={() => markAsRead(msg)}
         >
           {/* Display sender name below the message in group chats */}
-          {selectedGroup && msg.sender.includes('@') && (
+          {selectedGroup && typeof msg.sender === 'string' && msg.sender.includes('@') && (
             <div className="message-sender">
               {msg.sender.split('@')[0]}
             </div>
@@ -771,6 +771,7 @@ useEffect(() => {
     ))}
   </ul>
 </div>
+
 
 
                           {/* Chat Message Input */}
