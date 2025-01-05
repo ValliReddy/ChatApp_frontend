@@ -702,39 +702,74 @@ useEffect(() => {
 
     
 
-                          {/* Chat History */}
-                          <div className="chat-history">
-                          <ul className="list-unstyled">
-  {(messages[selectedUser] || messages[selectedGroup] || []).map((msg, index) => (
-    <li key={index} className="clearfix">
-      <div className="message-data">
-        <span className="message-data-name"></span>
-      </div>
-      <div
-        className={`message ${
-          msg.sender === currentUser ? 'my-message' : 'other-message'
-        } float-${msg.sender === currentUser ? 'right' : 'left'}`}
-        onClick={() => markAsRead(msg)}
-      >
-        {msg.text}
+//                           {/* Chat History */}
+//                           <div className="chat-history">
+//                           <ul className="list-unstyled">
+//   {(messages[selectedUser] || messages[selectedGroup] || []).map((msg, index) => (
+//     <li key={index} className="clearfix">
+//       <div className="message-data">
+//         <span className="message-data-name"></span>
+//       </div>
+//       <div
+//         className={`message ${
+//           msg.sender === currentUser ? 'my-message' : 'other-message'
+//         } float-${msg.sender === currentUser ? 'right' : 'left'}`}
+//         onClick={() => markAsRead(msg)}
+//       >
+//         {msg.text}
         
-        <div className="message-time">{msg.time}</div>
+//         <div className="message-time">{msg.time}</div>
        
-        {msg.sender === currentUser && (
-          <div className="message-status">
-            {msg.status === 'single-tick' && <span className="single-tick"></span>}
-            {msg.status === 'double-tick' && <span className="double-tick"></span>}
-            {msg.status === 'blue-double-tick' && (
-              <span className="blue-double-tick"></span>
+//         {msg.sender === currentUser && (
+//           <div className="message-status">
+//             {msg.status === 'single-tick' && <span className="single-tick"></span>}
+//             {msg.status === 'double-tick' && <span className="double-tick"></span>}
+//             {msg.status === 'blue-double-tick' && (
+//               <span className="blue-double-tick"></span>
+//             )}
+//           </div>
+//         )}
+//       </div>
+//     </li>
+//   ))}
+// </ul>
+
+
+// </div>
+ {/* Chat History */}
+<div className="chat-history">
+  <ul className="list-unstyled">
+    {(messages[selectedUser] || messages[selectedGroup] || []).map((msg, index) => (
+      <li key={index} className="clearfix">
+        <div
+          className={`message-box ${
+            msg.sender === currentUser ? 'my-message' : 'other-message'
+          }`}
+          onClick={() => markAsRead(msg)}
+        >
+          {/* Display sender name below the message in group chats */}
+          {selectedGroup && msg.sender.includes('@') && (
+            <div className="message-sender">
+              {msg.sender.split('@')[0]}
+            </div>
+          )}
+          <div className="message-text">{msg.text}</div>
+          <div className="message-footer">
+            <span className="message-time">{msg.time}</span>
+            {msg.sender === currentUser && (
+              <span className="message-status">
+                {msg.status === 'single-tick' && <span className="single-tick"></span>}
+                {msg.status === 'double-tick' && <span className="double-tick"></span>}
+                {msg.status === 'blue-double-tick' && (
+                  <span className="blue-double-tick"></span>
+                )}
+              </span>
             )}
           </div>
-        )}
-      </div>
-    </li>
-  ))}
-</ul>
-
-
+        </div>
+      </li>
+    ))}
+  </ul>
 </div>
 
 
