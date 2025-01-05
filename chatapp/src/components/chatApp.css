@@ -16,6 +16,67 @@ input[type="search"] {
     color: #ECF0F5;
    }
 }
+.message-box {
+    max-width: 70%;
+    margin: 10px 0;
+    padding: 10px 15px;
+    border-radius: 15px;
+    position: relative;
+    display: inline-block;
+    font-size: 14px;
+    background-color: #e1ffc7; /* Light green for sent messages */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  
+  .my-message {
+    background-color: #dcf8c6; /* WhatsApp green for sent messages */
+    float: right;
+    text-align: left;
+  }
+  
+  .other-message {
+    background-color: #fff; /* White for received messages */
+    float: left;
+    text-align: left;
+  }
+  
+  .message-sender {
+    font-size: 12px;
+    color: #888;
+    margin-bottom: 5px;
+  }
+  
+  .message-text {
+    margin: 0;
+  }
+  
+  .message-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    margin-top: 5px;
+    color: #888;
+  }
+  
+  .message-time {
+    margin-left: auto;
+  }
+  
+  .message-status {
+    margin-left: 5px;
+  }
+  
+  .single-tick::before,
+  .double-tick::before,
+  .blue-double-tick::before {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    content: '';
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
 
 .group-members-dropdown {
     margin-top: 10px;
