@@ -774,7 +774,7 @@ useEffect(() => {
 
 
 
-                          {/* Chat Message Input */}
+                        
                           <div className="chat-message clearfix">
                               <div className="input-group mb-0">
 
